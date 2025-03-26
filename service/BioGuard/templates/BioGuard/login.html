@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    .message {
+        margin-top: 20px;
+        color: #00ff99;
+        text-decoration: none;
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    <button class="home-button" onclick="window.location.href='/'">
+        <i class="fas fa-home"></i> 
+    </button>
+    <section>
+        <h2>Login</h2>
+        <form class="login-form" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username.label_tag }} {{ form.username }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }} {{ form.password }}<br> 
+            </div>
+            <!-- <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div> -->
+            <button type="submit">Login</button>
+        </form>
+        <br>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <a href="/register" class="register-link">Don't have an account? Register now</a>
+    </section>
+</body>
+</html>
