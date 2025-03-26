@@ -29,7 +29,7 @@ class AppointmentForm(forms.ModelForm):
 class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
-        fields = ['id', 'name', 'description', 'vip']
+        fields = ['id', 'name', 'specialist', 'description', 'vip']
 
 class StaffForm(forms.ModelForm):
     class Meta:

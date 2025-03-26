@@ -40,7 +40,7 @@
                         <option value="" disabled selected>Select a service</option>
                         {% if services %}
                             {% for service in services %}
-                                <option value={{service.id}}>{{ service.name }}</option>
+                                <option value={{service.id}}>{{ service.name }}{% if service.vip %}(VIP){% endif %}</option>
                             {% endfor %}
                         {% endif %} 
                         <!-- <option value="service1">Doctor 1</option>

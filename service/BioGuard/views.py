@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import Patient, Appointment, Service
+from .models import Patient, Appointment, Service, Staff
 from .forms import UserRegisterForm, LoginForm, PatientForm, StaffForm
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -27,7 +27,7 @@ def bioguard_info(request):
 def profile(request):
     if not hasattr(request.user, 'patient'):
         return HttpResponse("This patient does not exist!")
-    patient = Patient.objects.filter(username=request.user.username).get()
+    patient = Patient.objects.filter(username=request.user).get()
     return render(request, 'BioGuard/profile.html', {'patient': patient})
         
 
@@ -58,6 +58,9 @@ def appointment(request):
                 p.save()
                 messages.success(request, f'Appointment created!')
                 return redirect('/profile')
+            else:
+                messages.error(request, f'Invalid appointment!')
+                return render(request, 'BioGuard/appointment.html', {'services': services})
         except Exception as e:
             # logging.error(e)
             messages.error(request, f'Invalid appointment!')
@@ -131,18 +134,28 @@ def create_service(request):
             name = request.POST.get('name')
             description = request.POST.get('description', None)
             vip = request.POST.get('vip', False)
+            vip = True if vip.lower() == 'true' else False
             if not name:
                 print("Name is required")
                 return HttpResponse("Name is required!", status=400)
-            Service.objects.create(
+            staff = Staff.objects.filter(user=request.user).get()
+            service = Service.objects.create(
                 name=name,
                 description=description,
-                vip=bool(vip)
+                specialist = staff,
+                vip=vip
             )
-            return HttpResponse("Service created!", status=201)
+            return HttpResponse(f"Service created! id = {service.id}", status=201)
         except:
             return HttpResponse("Error creating service!", status=500)
         
+@login_required
+def get_service(request):
+    if not hasattr(request.user, 'staff'):
+        return HttpResponse("You do not have permission to see a services!", status=403)
+    service_id = request.GET.get('id')
+    service = Service.objects.filter(specialist=request.user.staff, id=service_id).get()
+    return HttpResponse(f"{service.name=};{service.description=}" , status=302)
 # def docs_view(request):
 #     if request.method == 'TRACE':
 #         response = HttpResponse("This is a TRACE response.")

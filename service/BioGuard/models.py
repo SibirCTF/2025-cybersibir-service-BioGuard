@@ -19,10 +19,17 @@ class Patient(models.Model):
     # def __str__(self):
     #     return f'Name: {self.first_name} {self.last_name}, Birth Year: {self.birth_year}, Email: {self.email}'
 
+class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,)
+    username = models.CharField(max_length=100, primary_key=True)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    position = models.CharField(max_length=100, blank=True, null=True)
 
 class Service(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
+    specialist = models.ForeignKey(Staff, on_delete=models.CASCADE, to_field="username")
     description = models.TextField(blank=True, null=True)
     vip = models.BooleanField(default=False) 
 
@@ -35,24 +42,6 @@ class Appointment(models.Model):
         constraints = [
             UniqueConstraint(fields=['date', 'service_id'], name='unique_appointment')
         ]
-
-class Staff(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,)
-    username = models.CharField(max_length=100, primary_key=True)
-    first_name = models.CharField(max_length=100, blank=True, null=True)
-    last_name = models.CharField(max_length=100, blank=True, null=True)
-    position = models.CharField(max_length=100, blank=True, null=True)
-# class User(models.Model):
-#     email = models.EmailField(unique=True)
-#     first_name = models.CharField(max_length=30, blank=True)
-#     last_name = models.CharField(max_length=30, blank=True)
-#     birth_year = models.IntegerField(max_length=30, blank=True)
-#     password = models.CharField()
-
-#     USERNAME_FIELD = 'email'
-
-#     def __str__(self):
-#         return self.email
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
