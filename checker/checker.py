@@ -34,8 +34,8 @@ def service_down():
     print("[service is down] - 104")
     exit(104)
     
-def initialize_db():
-    db = sqlite3.connect("BioGuard.db")
+def initialize_db(host):
+    db = sqlite3.connect(f"{host}_BioGuard.db")
     db.execute(
         """
         CREATE TABLE IF NOT EXISTS checker (
@@ -57,7 +57,7 @@ class Checker():
     timeout: int = 10
         
     def __enter__(self):
-        self.db = initialize_db()
+        self.db = initialize_db(self.host)
         return self
 
     def __exit__(self, type, value, traceback):
@@ -65,7 +65,7 @@ class Checker():
 
     def __init__(self, host, port):
         self.host = host
-        self.db = initialize_db()
+        self.db = initialize_db(self.host)
         self.mch = CheckMachine(host=host, port=port, timeout=self.timeout)
 
     def check(self): 
@@ -180,7 +180,7 @@ def main():
                 c.put(args.f_id, args.flag, 1)
                 c.check()
             except requests.Timeout:
-                service_mumble()
+                service_down()
             except:
                 service_down()
             service_up()
@@ -189,7 +189,7 @@ def main():
                 c.get(args.f_id, args.flag, 1)
                 c.check()
             except requests.Timeout:
-                service_mumble()
+                service_down()
             except Exception as e:
                 service_down()
             service_up()
