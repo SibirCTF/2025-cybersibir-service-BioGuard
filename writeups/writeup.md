@@ -36,7 +36,7 @@ Connection: keep-alive
 
 csrfmiddlewaretoken=kxg20E47lIRyh2BpzF8CM1f2MaQydcY1FcoC8xpm5IYMjTg57YeBvrGU1VkXqKQe&username=user2&password1=1&password2=1&vip=True
 ```
-[эксплойт](./exploits/exploit1.py "")
+[эксплойт](../exploits/exploit1.py "")
 
 ### Race Condition
 Но чтобы записаться на vip услугу не обязательно иметь соотвествующий статус. Достаточно создать несколько запросов записи на данную услугу и один запрос на услугу доступную для текущего пациента, затем отправить их параллельно с синхронизацией по последнему байту. Ограничение по статусу пациента удастся обойти, а в профиле появится флаг.
