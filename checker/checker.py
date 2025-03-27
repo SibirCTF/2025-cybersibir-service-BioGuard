@@ -54,7 +54,7 @@ def initialize_db(host):
 
 class Checker():
     vulns: int = 2
-    timeout: int = 10
+    timeout: int = 2
         
     def __enter__(self):
         self.db = initialize_db(self.host)
